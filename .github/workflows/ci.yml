@@ -1,0 +1,32 @@
+name: Verify
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.3"
+      - name: Install local libSQL server
+        run: |
+          curl -fsSL https://github.com/tursodatabase/libsql/releases/download/libsql-server-v0.24.32/libsql-server-x86_64-unknown-linux-gnu.tar.xz -o /tmp/libsql.tar.xz
+          curl -fsSL https://github.com/tursodatabase/libsql/releases/download/libsql-server-v0.24.32/libsql-server-x86_64-unknown-linux-gnu.tar.xz.sha256 -o /tmp/libsql.sha256
+          cd /tmp
+          echo "$(cut -d ' ' -f 1 libsql.sha256)  libsql.tar.xz" | sha256sum -c -
+          tar -xJf libsql.tar.xz
+          sudo install -m 755 libsql-server-x86_64-unknown-linux-gnu/sqld /usr/local/bin/sqld
+      - run: bun install --frozen-lockfile
+      - run: bun x playwright install --with-deps chrome
+      - run: bun run verify
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-results
+          path: test-results/
+          retention-days: 7

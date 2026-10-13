@@ -1,0 +1,47 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"account_id": "372ce6de5d9be12aa7c3d993eee8a545",
+	"name": "cdfsend",
+	"main": "worker/index.js",
+	"compatibility_date": "2026-10-13",
+	"compatibility_flags": ["nodejs_compat"],
+	"assets": {
+		"directory": "./dist/client",
+		"binding": "ASSETS",
+		"not_found_handling": "single-page-application",
+		"run_worker_first": true,
+	},
+	"send_email": [
+		{
+			"name": "EMAIL",
+			"remote": true,
+		},
+	],
+	"triggers": {
+		"crons": ["0 0 * * *"],
+	},
+	"secrets": { "required": ["TURSO_AUTH_TOKEN"] },
+	"vars": {
+		"TURSO_DATABASE_URL": "libsql://cdfsend-production-mofax.aws-eu-west-1.turso.io",
+		"KEY_RATE_LIMIT": "60",
+		"ORG_RATE_LIMIT": "300",
+		"AUTH_RATE_LIMIT": "30",
+	},
+	"observability": {
+		"enabled": true,
+		"logs": {
+			"enabled": true,
+			"invocation_logs": false,
+		},
+		"traces": {
+			"enabled": true,
+			"head_sampling_rate": 0.01,
+		},
+	},
+	"routes": [
+		{
+			"pattern": "cdfsend.boodboard.com",
+			"custom_domain": true,
+		},
+	],
+}

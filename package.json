@@ -1,0 +1,54 @@
+{
+	"name": "cdfsend",
+	"version": "0.1.0",
+	"private": true,
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"dev": "node scripts/local.js dev",
+		"build": "vite build",
+		"preview": "node scripts/local.js preview",
+		"ci:check": "svelte-check && oxfmt --check && oxlint",
+		"fmt": "oxfmt",
+		"lint": "oxlint",
+		"test": "vitest run --config vitest.config.js",
+		"test:worker": "node scripts/local.js worker-tests",
+		"test:e2e": "playwright test",
+		"verify": "bun run ci:check && bun run test && bun run test:worker && bun run build && bun run test:e2e",
+		"db:migrate:local": "node scripts/local.js migrate",
+		"db:migrate:remote": "node scripts/migrate.js --remote",
+		"types:worker": "wrangler types worker/worker-configuration.d.ts --strict-vars=false",
+		"deploy": "bun run build && wrangler deploy --config dist/worker/wrangler.json",
+		"dev:offline": "node scripts/local.js offline"
+	},
+	"dependencies": {
+		"@libsql/client": "0.18.0",
+		"@simplewebauthn/browser": "14.0.0",
+		"@simplewebauthn/server": "14.0.3",
+		"hono": "4.13.13",
+		"sv-router": "0.19.0",
+		"svelte": "5.57.2",
+		"zod": "4.6.5"
+	},
+	"devDependencies": {
+		"@cloudflare/vite-plugin": "1.63.1",
+		"@cloudflare/vitest-plugin": "1.4.0",
+		"@playwright/test": "1.64.0",
+		"@stylistic/eslint-plugin": "^5.10.0",
+		"@sveltejs/vite-plugin-svelte": "7.3.1",
+		"@types/node": "26.6.5",
+		"oxfmt": "0.72.0",
+		"oxlint": "1.87.0",
+		"oxlint-plugin-eslint": "^1.88.0",
+		"resend": "6.32.1",
+		"svelte-check": "4.7.6",
+		"typescript": "6.0.3",
+		"vite": "8.3.4",
+		"vitest": "5.0.3",
+		"wrangler": "4.149.0"
+	},
+	"engines": {
+		"node": ">=22.12"
+	},
+	"packageManager": "bun@1.4.3"
+}

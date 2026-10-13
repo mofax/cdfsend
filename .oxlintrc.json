@@ -1,0 +1,64 @@
+{
+	"jsPlugins": [
+		"./.lint-plugins/rules.js",
+		"@stylistic/eslint-plugin",
+		{
+			"name": "eslint-js",
+			"specifier": "oxlint-plugin-eslint"
+		}
+	],
+	"categories": {
+		"correctness": "error",
+		"perf": "error"
+	},
+	"rules": {
+		"custom/no-mixed-ternary": "error",
+		"curly": ["error", "multi-line"],
+		"oxc/no-rest-spread-properties": "error",
+		"complexity": ["error", { "max": 10 }],
+		"no-nested-ternary": "error",
+		"@stylistic/padding-line-between-statements": [
+			"error",
+			{
+				"blankLine": "never",
+				"prev": "*",
+				"next": "return"
+			},
+			{
+				"blankLine": "always",
+				"prev": "*",
+				"next": "block-like"
+			},
+			{
+				"blankLine": "always",
+				"prev": "block-like",
+				"next": "*"
+			}
+		],
+		"@stylistic/no-multiple-empty-lines": [
+			"error",
+			{
+				"max": 1
+			}
+		],
+		"@stylistic/lines-between-class-members": ["error", "never"],
+		"eslint-js/no-restricted-syntax": [
+			"error",
+			{
+				"selector": "BinaryExpression > BinaryExpression > BinaryExpression",
+				"message": "Limit binary operator chains to two operators."
+			},
+			{
+				"selector": "LogicalExpression > LogicalExpression > LogicalExpression",
+				"message": "Limit logical operator chains to two operators."
+			},
+			{
+				"selector": ":matches(CallExpression, NewExpression) > :matches(BinaryExpression, LogicalExpression, ConditionalExpression).arguments",
+				"message": "Extract inline operations into semantically named variables before passing them as arguments."
+			}
+		]
+	},
+	"env": {
+		"builtin": true
+	}
+}
